@@ -20,28 +20,15 @@ class HajjUmrahGuideApp extends StatelessWidget {
       title: 'Hajj & Umrah Guide',
       theme: ThemeData(colorSchemeSeed: Colors.green, useMaterial3: true),
       home: BlocProvider(
-        create: (_) => RitualTrackerBloc(geofenceService: GeofenceService()).._start(),
+        create: (_) {
+          final bloc = RitualTrackerBloc(geofenceService: GeofenceService());
+          bloc.startGeofencing(defaultGeoZones);
+          return bloc;
+        },
         child: const DashboardScreen(),
       ),
     );
   }
-}
-
-extension on RitualTrackerBloc {
-  void _start() {
-    // Permission and platform background-location configuration are intentionally
-    // requested by the service at runtime instead of during widget construction.
-    // ignore: discarded_futures
-    geofenceServiceStart();
-  }
-
-  Future<void> geofenceServiceStart() async {
-    await _startZones();
-  }
-
-  Future<void> _startZones() => _service.start(defaultGeoZones);
-
-  GeofenceService get _service => (this as dynamic)._geofenceService as GeofenceService;
 }
 
 class DashboardScreen extends StatelessWidget {
@@ -58,31 +45,24 @@ class DashboardScreen extends StatelessWidget {
           return ListView(
             padding: const EdgeInsets.all(20),
             children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                    Text(title, style: Theme.of(context).textTheme.headlineMedium),
-                    const SizedBox(height: 8),
-                    Text(state.message ?? 'Prepare your pilgrimage, browse offline sites, or start a ritual.'),
-                    if (state.lastDistanceMeters != null) ...[
-                      const SizedBox(height: 8),
-                      Text('${state.lastDistanceMeters!.round()} m from zone center'),
-                    ],
-                  ]),
-                ),
-              ),
+              Card(child: Padding(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Text(title, style: Theme.of(context).textTheme.headlineMedium),
+                const SizedBox(height: 8),
+                Text(state.message ?? 'Prepare your pilgrimage, browse offline sites, or start a ritual.'),
+                if (state.lastDistanceMeters != null) ...[
+                  const SizedBox(height: 8),
+                  Text('${state.lastDistanceMeters!.round()} m from zone center'),
+                ],
+              ]))),
               const SizedBox(height: 16),
-              Card(
-                child: ListTile(
-                  title: const Text('Tawaf / Sa’i circuits'),
-                  subtitle: Text('${state.circuit} of 7 completed'),
-                  trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                    IconButton(onPressed: state.circuit == 0 ? null : () => context.read<RitualTrackerBloc>().add(const DecrementCircuit()), icon: const Icon(Icons.remove)),
-                    IconButton(onPressed: state.circuit == 7 ? null : () => context.read<RitualTrackerBloc>().add(const IncrementCircuit()), icon: const Icon(Icons.add)),
-                  ]),
-                ),
-              ),
+              Card(child: ListTile(
+                title: const Text('Tawaf / Sa’i circuits'),
+                subtitle: Text('${state.circuit} of 7 completed'),
+                trailing: Row(mainAxisSize: MainAxisSize.min, children: [
+                  IconButton(onPressed: state.circuit == 0 ? null : () => context.read<RitualTrackerBloc>().add(const DecrementCircuit()), icon: const Icon(Icons.remove)),
+                  IconButton(onPressed: state.circuit == 7 ? null : () => context.read<RitualTrackerBloc>().add(const IncrementCircuit()), icon: const Icon(Icons.add)),
+                ]),
+              )),
               const SizedBox(height: 12),
               const _DashboardAction(icon: Icons.map_outlined, title: 'Sacred Sites Map', subtitle: 'Offline-ready map and saved pins'),
               const _DashboardAction(icon: Icons.explore_outlined, title: 'Qibla & Compass', subtitle: 'Live heading using device sensors'),
