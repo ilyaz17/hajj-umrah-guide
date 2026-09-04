@@ -19,17 +19,9 @@ final class GeofenceUpdated extends RitualTrackerEvent {
   List<Object?> get props => [event.zone.id, event.distanceMeters, event.entered];
 }
 
-final class IncrementCircuit extends RitualTrackerEvent {
-  const IncrementCircuit();
-}
-
-final class DecrementCircuit extends RitualTrackerEvent {
-  const DecrementCircuit();
-}
-
-final class ResetCircuits extends RitualTrackerEvent {
-  const ResetCircuits();
-}
+final class IncrementCircuit extends RitualTrackerEvent { const IncrementCircuit(); }
+final class DecrementCircuit extends RitualTrackerEvent { const DecrementCircuit(); }
+final class ResetCircuits extends RitualTrackerEvent { const ResetCircuits(); }
 
 class RitualTrackerState extends Equatable {
   const RitualTrackerState({this.activeZone, this.circuit = 0, this.lastDistanceMeters, this.message});
@@ -62,6 +54,8 @@ class RitualTrackerBloc extends Bloc<RitualTrackerEvent, RitualTrackerState> {
 
   final GeofenceService _geofenceService;
   StreamSubscription<GeofenceEvent>? _subscription;
+
+  Future<void> startGeofencing(List<GeoZone> zones) => _geofenceService.start(zones);
 
   void _onGeofenceUpdated(GeofenceUpdated event, Emitter<RitualTrackerState> emit) {
     emit(state.copyWith(
