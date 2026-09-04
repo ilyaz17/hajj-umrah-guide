@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'core/data/default_geo_zones.dart';
 import 'features/geofencing/domain/geofence_service.dart';
+import 'features/mataf_sae/presentation/pages/mataf_sae_screen.dart';
 import 'features/ritual_tracker/presentation/bloc/ritual_tracker_bloc.dart';
 
 const _green = Color(0xFF0B5D3B);
@@ -71,14 +72,15 @@ class DashboardScreen extends StatelessWidget {
                 ],
               ]))),
               const SizedBox(height: 16),
-              Card(child: ListTile(
-                title: const Text('Tawaf / Sa’i circuits'),
-                subtitle: Text('${state.circuit} of 7 completed'),
-                trailing: Row(mainAxisSize: MainAxisSize.min, children: [
-                  IconButton(onPressed: state.circuit == 0 ? null : () => context.read<RitualTrackerBloc>().add(const DecrementCircuit()), icon: const Icon(Icons.remove)),
-                  IconButton(onPressed: state.circuit == 7 ? null : () => context.read<RitualTrackerBloc>().add(const IncrementCircuit()), icon: const Icon(Icons.add)),
-                ]),
-              )),
+              Card(
+                child: ListTile(
+                  leading: const Icon(Icons.sync, color: _green),
+                  title: const Text('Mataf & Sa’i Counter'),
+                  subtitle: const Text('Interactive 1–7 counter with GPS movement and heading assist'),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MatafSaeScreen())),
+                ),
+              ),
               const SizedBox(height: 12),
               const _DashboardAction(icon: Icons.map_outlined, title: 'Sacred Sites Map', subtitle: 'Offline-ready map and saved pins'),
               const _DashboardAction(icon: Icons.explore_outlined, title: 'Qibla & Compass', subtitle: 'Live heading using device sensors'),
