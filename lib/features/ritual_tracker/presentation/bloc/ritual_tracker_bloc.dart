@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../core/models/geo_zone.dart';
-import '../../geofencing/domain/geofence_service.dart';
+import '../../../../core/models/geo_zone.dart';
+import '../../../geofencing/domain/geofence_service.dart';
 
 sealed class RitualTrackerEvent extends Equatable {
   const RitualTrackerEvent();
