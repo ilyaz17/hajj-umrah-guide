@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-GRADLE_VERSION="8.6"
+GRADLE_VERSION="8.13"
 GRADLE_HOME="${HOME}/.gradle/local/gradle-${GRADLE_VERSION}"
 
 if command -v gradle >/dev/null 2>&1; then
