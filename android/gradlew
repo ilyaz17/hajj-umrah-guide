@@ -4,10 +4,6 @@ set -euo pipefail
 GRADLE_VERSION="8.13"
 GRADLE_HOME="${HOME}/.gradle/local/gradle-${GRADLE_VERSION}"
 
-if command -v gradle >/dev/null 2>&1; then
-  exec gradle "$@"
-fi
-
 if [ ! -x "${GRADLE_HOME}/bin/gradle" ]; then
   mkdir -p "${HOME}/.gradle/local"
   archive="${HOME}/.gradle/local/gradle-${GRADLE_VERSION}-bin.zip"
