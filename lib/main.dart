@@ -5,6 +5,9 @@ import 'core/data/default_geo_zones.dart';
 import 'features/geofencing/domain/geofence_service.dart';
 import 'features/ritual_tracker/presentation/bloc/ritual_tracker_bloc.dart';
 
+const _green = Color(0xFF0B5D3B);
+const _gold = Color(0xFFD4AF37);
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const HajjUmrahGuideApp());
@@ -15,10 +18,11 @@ class HajjUmrahGuideApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = ColorScheme.fromSeed(seedColor: _green).copyWith(secondary: _gold);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Hajj & Umrah Guide',
-      theme: ThemeData(colorSchemeSeed: Colors.green, useMaterial3: true),
+      theme: ThemeData(colorScheme: colorScheme, useMaterial3: true),
       home: BlocProvider(
         create: (_) {
           final bloc = RitualTrackerBloc(geofenceService: GeofenceService());
@@ -37,7 +41,15 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Hajj & Umrah Guide')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            ClipOval(child: Image.asset('assets/branding/hajj_umrah_guide.webp', width: 40, height: 40, fit: BoxFit.cover)),
+            const SizedBox(width: 12),
+            const Text('Hajj & Umrah Guide'),
+          ],
+        ),
+      ),
       body: BlocBuilder<RitualTrackerBloc, RitualTrackerState>(
         builder: (context, state) {
           final zone = state.activeZone;
@@ -46,8 +58,12 @@ class DashboardScreen extends StatelessWidget {
             padding: const EdgeInsets.all(20),
             children: [
               Card(child: Padding(padding: const EdgeInsets.all(20), child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Text(title, style: Theme.of(context).textTheme.headlineMedium),
-                const SizedBox(height: 8),
+                Row(children: [
+                  ClipOval(child: Image.asset('assets/branding/hajj_umrah_guide.webp', width: 72, height: 72, fit: BoxFit.cover)),
+                  const SizedBox(width: 16),
+                  Expanded(child: Text(title, style: Theme.of(context).textTheme.headlineMedium)),
+                ]),
+                const SizedBox(height: 12),
                 Text(state.message ?? 'Prepare your pilgrimage, browse offline sites, or start a ritual.'),
                 if (state.lastDistanceMeters != null) ...[
                   const SizedBox(height: 8),
