@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+GRADLE_VERSION="8.6"
+GRADLE_HOME="${HOME}/.gradle/local/gradle-${GRADLE_VERSION}"
+
+if command -v gradle >/dev/null 2>&1; then
+  exec gradle "$@"
+fi
+
+if [ ! -x "${GRADLE_HOME}/bin/gradle" ]; then
+  mkdir -p "${HOME}/.gradle/local"
+  archive="${HOME}/.gradle/local/gradle-${GRADLE_VERSION}-bin.zip"
+  if [ ! -f "${archive}" ]; then
+    curl -fsSL "https://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip" -o "${archive}"
+  fi
+  rm -rf "${GRADLE_HOME}"
+  unzip -q "${archive}" -d "${HOME}/.gradle/local"
+fi
+
+exec "${GRADLE_HOME}/bin/gradle" "$@"
