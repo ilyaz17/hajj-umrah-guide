@@ -1,173 +1,151 @@
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+'use client'
 
-/**
- * Pricing cards component displaying the three subscription tiers.
- * This is a Client Component to enable interactive elements like hover states and button clicks.
- */
+import { Check, X } from 'lucide-react'
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
 
 const plans = [
   {
-    name: 'FREE',
+    name: 'Free',
     price: '$0',
-    period: '/mo',
-    description: 'Perfect for individual pilgrims tracking their personal journey',
+    period: '/month',
+    description: 'Essential guidance for your pilgrimage',
+    tier: 'free',
     features: [
-      'Max 3 active group profiles',
-      '100 total logged ritual updates',
-      'Access to public guides',
-      'Basic maps navigation',
-      'Standard support',
+      { text: 'Basic step-by-step ritual guides', included: true },
+      { text: 'Tawaf & Sa\'i counters (manual)', included: true },
+      { text: 'Standard Dua library', included: true },
+      { text: 'Basic maps of holy sites', included: true },
+      { text: 'GPS-based ritual tracking', included: false },
+      { text: 'Offline audio guides', included: false },
+      { text: 'Family member tracking', included: false },
+      { text: 'Crowd density alerts', included: false },
+      { text: 'AI ritual assistant', included: false }
     ],
-    limitations: [
-      'No SOS broadcasting',
-      'No real-time family syncing',
-      'No historical routes',
-    ],
-    ctaText: 'Get Started Free',
-    highlighted: false,
-    borderColor: 'border-gray-200',
+    cta: 'Get Started',
+    popular: false
   },
   {
-    name: 'LITE',
+    name: 'Lite',
     price: '$9',
-    period: '/mo',
-    description: 'Ideal for families managing small groups during Hajj/Umrah',
+    period: '/month',
+    description: 'Enhanced experience with GPS tracking',
+    tier: 'lite',
     features: [
-      'Max 15 active group profiles',
-      '2,000 logged ritual milestones/month',
-      'Real-time family syncing',
-      'Historical routes tracking',
-      'Offline guides access',
-      'Priority email support',
+      { text: 'Basic step-by-step ritual guides', included: true },
+      { text: 'Tawaf & Sa\'i counters (manual)', included: true },
+      { text: 'Standard Dua library', included: true },
+      { text: 'Basic maps of holy sites', included: true },
+      { text: 'GPS-based ritual tracking', included: true },
+      { text: 'Offline audio guides', included: true },
+      { text: 'Personalized itinerary', included: true },
+      { text: 'Family member tracking', included: false },
+      { text: 'Crowd density alerts', included: false },
+      { text: 'AI ritual assistant', included: false }
     ],
-    limitations: [
-      'No crowd density analytics',
-      'No prioritized SOS dashboard',
-    ],
-    ctaText: 'Start Lite Trial',
-    highlighted: false,
-    borderColor: 'border-emerald-500',
+    cta: 'Upgrade to Lite',
+    popular: false
   },
   {
-    name: 'PRO',
+    name: 'Pro',
     price: '$29',
-    period: '/mo',
-    description: 'Complete solution for group leaders and travel agencies',
+    period: '/month',
+    description: 'Complete pilgrimage companion with premium features',
+    tier: 'pro',
     features: [
-      'Unlimited group profiles',
-      'Unlimited historical tracking',
-      'Unlimited ritual counters',
-      'Prioritized SOS dashboard',
-      'Crowd density analytics',
-      'Family hub management',
-      '24/7 priority support',
-      'API access for integrations',
+      { text: 'Basic step-by-step ritual guides', included: true },
+      { text: 'Tawaf & Sa\'i counters (manual)', included: true },
+      { text: 'Standard Dua library', included: true },
+      { text: 'Basic maps of holy sites', included: true },
+      { text: 'GPS-based ritual tracking', included: true },
+      { text: 'Offline audio guides', included: true },
+      { text: 'Personalized itinerary', included: true },
+      { text: 'Family member tracking (Group Hub)', included: true },
+      { text: 'Crowd density alerts', included: true },
+      { text: 'AI ritual assistant', included: true },
+      { text: 'Priority support', included: true }
     ],
-    limitations: [],
-    ctaText: 'Go Pro Today',
-    highlighted: true,
-    borderColor: 'border-amber-500',
-    badge: 'Most Popular',
-  },
-];
+    cta: 'Upgrade to Pro',
+    popular: true
+  }
+]
 
 export function PricingCards() {
+  const handleSelectPlan = (tier) => {
+    // TODO: Integrate with payment gateway
+    console.log('Selected plan:', tier)
+  }
+
   return (
-    <div className="grid grid-cols-1 gap-8 lg:grid-cols-3 lg:gap-12">
+    <div className="grid gap-8 lg:grid-cols-3">
       {plans.map((plan) => (
         <Card
-          key={plan.name}
-          className={`relative flex h-full flex-col ${
-            plan.highlighted
-              ? `${plan.borderColor} border-2 shadow-lg`
-              : `${plan.borderColor} border`
-          } transition-all duration-300 hover:shadow-xl`}
+          key={plan.tier}
+          className={`relative flex flex-col ${
+            plan.popular
+              ? 'border-emerald-600 shadow-lg scale-105'
+              : 'border-slate-200'
+          }`}
         >
-          {plan.badge && (
+          {plan.popular && (
             <Badge
               variant="default"
-              className="absolute -top-3 left-1/2 -translate-x-1/2 bg-amber-500 px-4 py-1 text-sm font-semibold"
+              className="absolute -top-3 left-1/2 -translate-x-1/2 bg-emerald-600 hover:bg-emerald-700"
             >
-              {plan.badge}
+              Most Popular
             </Badge>
           )}
 
-          <CardHeader className="pb-4">
-            <CardTitle className="flex flex-col items-center text-center">
-              <span className="text-3xl font-bold">{plan.name}</span>
-              <div className="mt-4 flex items-baseline justify-center">
-                <span className="text-5xl font-extrabold">{plan.price}</span>
-                <span className="ml-1 text-xl text-muted-foreground">
-                  {plan.period}
-                </span>
-              </div>
+          <CardHeader className="text-center pb-2">
+            <CardTitle className="text-2xl font-bold text-slate-900">
+              {plan.name}
             </CardTitle>
-            <p className="mt-4 text-sm text-muted-foreground">
-              {plan.description}
-            </p>
+            <div className="mt-4 flex items-baseline justify-center gap-1">
+              <span className="text-5xl font-bold text-emerald-700">
+                {plan.price}
+              </span>
+              <span className="text-slate-500">{plan.period}</span>
+            </div>
+            <p className="mt-2 text-sm text-slate-600">{plan.description}</p>
           </CardHeader>
 
-          <CardContent className="flex flex-1 flex-col">
-            <ul className="mb-6 space-y-3 text-sm">
+          <CardContent className="flex-1 pt-6">
+            <ul className="space-y-3">
               {plan.features.map((feature, index) => (
-                <li key={index} className="flex items-start">
-                  <svg
-                    className="mr-2 h-5 w-5 flex-shrink-0 text-green-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
+                <li key={index} className="flex items-start gap-3">
+                  {feature.included ? (
+                    <Check className="h-5 w-5 text-emerald-600 shrink-0 mt-0.5" />
+                  ) : (
+                    <X className="h-5 w-5 text-slate-300 shrink-0 mt-0.5" />
+                  )}
+                  <span
+                    className={`text-sm ${
+                      feature.included ? 'text-slate-700' : 'text-slate-400'
+                    }`}
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span>{feature}</span>
-                </li>
-              ))}
-              {plan.limitations.map((limitation, index) => (
-                <li
-                  key={index}
-                  className="flex items-start text-muted-foreground"
-                >
-                  <svg
-                    className="mr-2 h-5 w-5 flex-shrink-0 text-gray-400"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M6 18L18 6M6 6l12 12"
-                    />
-                  </svg>
-                  <span>{limitation}</span>
+                    {feature.text}
+                  </span>
                 </li>
               ))}
             </ul>
-
-            <Button
-              className={`mt-auto w-full ${
-                plan.highlighted
-                  ? 'bg-amber-500 hover:bg-amber-600'
-                  : plan.name === 'LITE'
-                    ? 'bg-emerald-600 hover:bg-emerald-700'
-                    : ''
-              }`}
-              variant={plan.highlighted || plan.name === 'LITE' ? 'default' : 'outline'}
-              size="lg"
-            >
-              {plan.ctaText}
-            </Button>
           </CardContent>
+
+          <CardFooter className="pt-6">
+            <Button
+              className={`w-full ${
+                plan.popular
+                  ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
+                  : 'bg-slate-900 hover:bg-slate-800 text-white'
+              }`}
+              size="lg"
+              onClick={() => handleSelectPlan(plan.tier)}
+            >
+              {plan.cta}
+            </Button>
+          </CardFooter>
         </Card>
       ))}
     </div>
-  );
+  )
 }
