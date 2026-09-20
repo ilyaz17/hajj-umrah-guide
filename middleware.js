@@ -1,0 +1,10 @@
+import { NextResponse } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+
+export async function middleware(request) {
+  const response = NextResponse.next({ request }); const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  const supabase = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL, key, { cookies: { getAll: () => request.cookies.getAll(), setAll: (items) => items.forEach(({ name, value, options }) => response.cookies.set(name, value, options)) } })
+  await supabase.auth.getUser()
+  return response
+}
+export const config = { matcher: ['/((?!_next/static|_next/image|favicon.ico).*)'] }
